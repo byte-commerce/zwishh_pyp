@@ -44,7 +44,7 @@ jobs:
     env:
       TWINE_USERNAME: __token__
       TWINE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-      REPO_URL: https://pypi.pkg.github.com/${{ github.repository_owner }}
+      REPO_URL: https://pypi.pkg.github.com/zwishh_pyp
 
     steps:
     - uses: actions/checkout@v4
