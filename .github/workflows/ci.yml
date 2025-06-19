@@ -27,7 +27,7 @@ jobs:
         pip install .[dev]
 
     - name: Ruff lint
-      run: ruff src/ tests/
+      run: ruff check src/ tests/
 
     - name: Run tests
       run: pytest -q
