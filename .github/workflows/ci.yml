@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "release/**"]
+    tags: ["v*"]           # publish job triggers on tags like v0.2.0
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install .[dev]
+
+    - name: Ruff lint
+      run: ruff src/ tests/
+
+    - name: Run tests
+      run: pytest -q
+
+  publish:
+    # Runs only on tag pushes beginning with "v"
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read          # for checkout
+      packages: write         # needed to upload to GitHub Packages
+
+    env:
+      TWINE_USERNAME: __token__
+      TWINE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+      REPO_URL: https://pypi.pkg.github.com/${{ github.repository_owner }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Build wheel
+      run: |
+        python -m pip install --upgrade pip build
+        python -m build
+
+    - name: Upload to GitHub Packages
+      run: |
+        python -m pip install --upgrade twine
+        twine upload --repository-url "$REPO_URL" dist/*
