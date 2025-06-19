@@ -23,6 +23,7 @@ Each client:
 - Uses async `httpx`
 - Injects service-to-service API key headers
 - Handles standard error responses
+- Retries the request with exponential backoff
 
 ---
 
