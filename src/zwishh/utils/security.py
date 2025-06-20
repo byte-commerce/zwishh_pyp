@@ -47,7 +47,7 @@ from typing import Callable, Optional, Set
 import httpx
 from fastapi import Header, HTTPException, Security, status
 from fastapi.security import APIKeyHeader
-from pydantic import AnyHttpUrl, BaseModel, Field
+from pydantic import AnyHttpUrl, BaseModel, Field, ConfigDict
 
 __all__ = [
     "SecurityConfig",
@@ -64,8 +64,8 @@ class SecurityConfig(BaseModel):
     allowed_roles: Set[str] = Field(default_factory=lambda: {"user"}, description="Roles allowed to access the endpoint")
     request_timeout: float = Field(5.0, description="Timeout (seconds) for the call to Auth service")
 
-    class Config:
-        frozen = True  # make it hashable / safe to share between threads
+    # make it hashable / safe to share between threads
+    model_config = ConfigDict(frozen=True) 
 
 
 # ---------------------------------------------------------------------------

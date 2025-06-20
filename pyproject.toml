@@ -11,11 +11,12 @@ dependencies = [
   "httpx>=0.26",               # for async HTTP SDK
   "pydantic>=2.7",             # for schema validation
   "typing-extensions>=4.0",
-  "fastapi>=0.110"
+  "fastapi>=0.110",
+  "tenacity>=8.0"
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "mypy", "ruff", "respx"]
+dev = ["pytest", "pytest-asyncio", "mypy", "ruff", "respx"]
 
 [build-system]
 requires = ["setuptools>=68", "wheel", "build"]
