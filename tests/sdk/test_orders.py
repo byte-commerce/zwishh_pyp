@@ -7,7 +7,6 @@ from httpx import Response
 from zwishh.sdk.orders import OrderServiceClient
 from zwishh.sdk.base_client import (
     ServiceClientError,
-    ServiceClientNotFound,
     ServiceClientUnauthorized,
 )
 

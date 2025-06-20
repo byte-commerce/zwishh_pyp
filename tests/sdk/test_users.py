@@ -6,7 +6,6 @@ from httpx import Response
 
 from zwishh.sdk.users import UserServiceClient
 from zwishh.sdk.base_client import (
-    ServiceClientError,
     ServiceClientNotFound,
     ServiceClientUnauthorized,
 )

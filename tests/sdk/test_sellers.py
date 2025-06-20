@@ -6,9 +6,7 @@ from httpx import Response
 
 from zwishh.sdk.sellers import SellerServiceClient
 from zwishh.sdk.base_client import (
-    ServiceClientError,
     ServiceClientNotFound,
-    ServiceClientUnauthorized,
 )
 
 

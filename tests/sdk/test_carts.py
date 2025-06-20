@@ -6,7 +6,6 @@ from httpx import Response
 
 from zwishh.sdk.carts import CartServiceClient
 from zwishh.sdk.base_client import (
-    ServiceClientError,
     ServiceClientNotFound,
     ServiceClientUnauthorized,
 )
