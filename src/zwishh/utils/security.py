@@ -45,8 +45,9 @@ import json
 from typing import Callable, Optional, Set
 
 import httpx
-from fastapi import Header, HTTPException, Security, status
-from fastapi.security import APIKeyHeader
+from fastapi import Header, HTTPException, Security, status, Depends
+
+from fastapi.security import APIKeyHeader, HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import AnyHttpUrl, BaseModel, Field, ConfigDict
 
 __all__ = [
@@ -107,11 +108,18 @@ def get_current_user_id_dep(config: SecurityConfig) -> Callable[[Optional[str], 
     2. `Authorization` header - validated by calling `auth_service_url` `/me`.
     """
 
+    security = HTTPBearer(
+        bearerFormat="JWT",
+        scheme_name="Authorization",
+        description="Bearer token",
+        auto_error=False,
+    )
+
     async def _dependency(
         x_apigateway_api_userinfo: Optional[str] = Header(
             None, alias="X-Apigateway-Api-Userinfo"
         ),
-        authorization: Optional[str] = Header(None, alias="Authorization"),
+        authorization: HTTPAuthorizationCredentials = Depends(security),
     ) -> int:
         # ------------------------------------------------------------------
         # 1. API-Gateway header path
@@ -137,9 +145,10 @@ def get_current_user_id_dep(config: SecurityConfig) -> Callable[[Optional[str], 
         if authorization is None:
             raise _missing_credentials()
 
+        auth_header = f"{authorization.scheme} {authorization.credentials}"
         user_info = await _fetch_user_info_from_auth_service(
             auth_service_url=str(config.auth_service_url),
-            authorization_header=authorization,
+            authorization_header=auth_header,
             timeout=config.request_timeout,
         )
 
