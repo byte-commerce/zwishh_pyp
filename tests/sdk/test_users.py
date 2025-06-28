@@ -46,22 +46,23 @@ async def test_get_user_success(user_service: UserServiceClient) -> None:
 async def test_get_user_address_success(user_service: UserServiceClient) -> None:
     """Test successful user address retrieval."""
     # Arrange
+    user_id = 123
     address_id = 456
     expected_address = {
         "id": address_id, 
-        "user_id": 123,
+        "user_id": user_id,
         "street": "123 Test St",
         "city": "Test City"
     }
     
     # Mock the HTTP response
     mock_route = respx.get(
-        f"http://test-server/internal/addresses/{address_id}",
+        f"http://test-server/internal/users/{user_id}/addresses/{address_id}",
         headers={"X-Service-API-Key": "test-key"}
     ).mock(return_value=Response(200, json=expected_address))
     
     # Act
-    address = await user_service.get_user_address(address_id)
+    address = await user_service.get_user_address(user_id, address_id)
     
     # Assert
     assert address == expected_address
@@ -112,17 +113,18 @@ async def test_get_user_unauthorized(user_service: UserServiceClient) -> None:
 async def test_get_user_address_not_found(user_service: UserServiceClient) -> None:
     """Test address not found scenario."""
     # Arrange
+    user_id = 123
     address_id = 999
     
     # Mock 404 response
     respx.get(
-        f"http://test-server/internal/addresses/{address_id}",
+        f"http://test-server/internal/users/{user_id}/addresses/{address_id}",
         headers={"X-Service-API-Key": "test-key"}
     ).mock(return_value=Response(404, text="Address not found"))
     
     # Act & Assert
     with pytest.raises(ServiceClientNotFound):
-        await user_service.get_user_address(address_id)
+        await user_service.get_user_address(user_id, address_id)
 
 
 # Test API key injection

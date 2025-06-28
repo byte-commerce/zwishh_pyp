@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-asyncio", "mypy", "ruff", "respx"]
+dev = ["pytest", "pytest-asyncio", "mypy", "ruff", "respx", "pytest-cov"]
 
 [build-system]
 requires = ["setuptools>=68", "wheel", "build"]

@@ -21,19 +21,22 @@ followers_count = await interaction_client.get_followers_count(123)
 print(followers_count)
 ```
 """
+from __future__ import annotations
+
+from .base_client import BaseServiceClient
 
 class InteractionServiceClient(BaseServiceClient):
     """High-level async wrapper for Interaction-service endpoints."""
-    async def get_followers_count(seller_id: int):
+    async def get_followers_count(self, seller_id: int):
         endpoint = f"sellers/{seller_id}/followers/count"
         return await self.get(endpoint)
 
-    async def get_likes_count(product_ids: list[int]):
+    async def get_likes_count(self, product_ids: list[int]):
         endpoint = f"products/likes/count"
         params = {"product_ids": product_ids}
         return await self.get(endpoint, params=params)
 
-    async def get_views_count(product_ids: list[int]):
+    async def get_views_count(self, product_ids: list[int]):
         endpoint = f"products/view-totals"
         params = {"product_ids": product_ids}
         return await self.get(endpoint, params=params)

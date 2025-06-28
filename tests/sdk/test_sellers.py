@@ -27,7 +27,7 @@ async def test_create_seller_success(seller_service: SellerServiceClient) -> Non
     
     # Mock the HTTP response
     mock_route = respx.post(
-        "http://test-server/me",
+        "http://test-server/internal/me",
         json={"phone_number": "+1234567890"},
         headers={"X-Service-API-Key": "test-key"}
     ).mock(return_value=Response(201, json=expected_seller))
@@ -51,7 +51,7 @@ async def test_get_seller_by_phone_number_success(seller_service: SellerServiceC
     
     # Mock the HTTP response
     mock_route = respx.get(
-        f"http://test-server/phone/{phone_number}",
+        f"http://test-server/internal/phone/{phone_number}",
         headers={"X-Service-API-Key": "test-key"}
     ).mock(return_value=Response(200, json=expected_seller))
     
@@ -139,7 +139,7 @@ async def test_api_key_injection(seller_service: SellerServiceClient) -> None:
     
     # Mock the HTTP response
     mock_route = respx.get(
-        f"http://test-server/phone/{phone_number}",
+        f"http://test-server/internal/phone/{phone_number}",
         headers={"X-Service-API-Key": "test-key"}
     ).mock(return_value=Response(200, json={"id": 1, "phone_number": phone_number}))
     
