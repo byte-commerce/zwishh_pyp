@@ -1,6 +1,6 @@
 [project]
 name = "zwishh"
-version = "0.1.3"
+version = "0.1.4"
 description = "Internal utils and SDKs for Zwishh services"
 authors = [{ name = "Backend Team", email = "dev@zwishh.com" }]
 readme = "README.md"
