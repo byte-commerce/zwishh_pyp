@@ -34,16 +34,31 @@ class UserServiceClient(BaseServiceClient):
     # ------------------------------------------------------------------ #
     # Public API                                                         #
     # ------------------------------------------------------------------ #
+    async def create_user(self, user: dict) -> Dict[str, Any]:
+        """Create a user."""
+
+        endpoint = "internal/me"
+        data = {
+            "phone_number": user["phone_number"],
+        }
+        return await self.post(endpoint, json=data)
+    
     async def get_user(self, user_id: int) -> Dict[str, Any]:
         """Get user details."""
 
         endpoint = f"internal/users/{user_id}"
         return await self.get(endpoint)
 
-    async def get_user_address(self, address_id: int) -> Dict[str, Any]:
+    async def get_user_by_phone_number(self, phone_number: str) -> Dict[str, Any]:
+        """Get user by phone number."""
+
+        endpoint = f"internal/phone/{phone_number}"
+        return await self.get(endpoint)
+
+    async def get_user_address(self, user_id: int, address_id: int) -> Dict[str, Any]:
         """Get user address."""
 
-        endpoint = f"internal/addresses/{address_id}"
+        endpoint = f"internal/users/{user_id}/addresses/{address_id}"
         return await self.get(endpoint)
 
     

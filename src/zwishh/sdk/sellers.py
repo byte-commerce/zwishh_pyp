@@ -40,7 +40,7 @@ class SellerServiceClient(BaseServiceClient):
     ) -> Dict[str, Any]:
         """Create a seller."""
 
-        endpoint = "me"
+        endpoint = "internal/me"
         data = {
             "phone_number": seller["phone_number"],
         }
@@ -52,7 +52,7 @@ class SellerServiceClient(BaseServiceClient):
     ) -> Dict[str, Any]:
         """Get seller by phone number."""
 
-        endpoint = f"phone/{phone_number}"
+        endpoint = f"internal/phone/{phone_number}"
         return await self.get(endpoint)
 
     async def get_shop(self, shop_id: int) -> Dict[str, Any]:
@@ -60,6 +60,26 @@ class SellerServiceClient(BaseServiceClient):
 
         endpoint = f"internal/shops/{shop_id}"
         return await self.get(endpoint)
+
+    async def get_shops(self, limit: int = 10, offset: int = 0) -> Dict[str, Any]:
+        """Get shops."""
+
+        endpoint = "internal/shops"
+        params = {
+            "limit": limit,
+            "offset": offset,
+        }
+        return await self.get(endpoint, params=params)
+
+    async def get_products(self, limit: int = 10, offset: int = 0) -> Dict[str, Any]:
+        """Get products."""
+
+        endpoint = "internal/products"
+        params = {
+            "limit": limit,
+            "offset": offset,
+        }
+        return await self.get(endpoint, params=params)
 
     async def get_product_variant_details(
         self, 
@@ -70,3 +90,15 @@ class SellerServiceClient(BaseServiceClient):
 
         endpoint = f"internal/products/{product_id}/variants/{variant_id}"
         return await self.get(endpoint)
+
+    async def get_variants_batch(
+        self, 
+        variant_ids: list[str], 
+    ) -> Dict[str, Any]:
+        """Fetch variant details from seller service."""
+
+        endpoint = "internal/products/variants/batch"
+        data = {
+            "variant_ids": variant_ids,
+        }
+        return await self.post(endpoint, json=data)
