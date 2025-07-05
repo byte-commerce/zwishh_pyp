@@ -28,17 +28,36 @@ from .base_client import BaseServiceClient
 
 from typing import Dict, Any
 
+
 class DeliveryServiceClient(BaseServiceClient):
     """High-level async wrapper for Delivery-service endpoints."""
-    async def get_quote(self, order: dict) -> Dict[str, Any]:
+
+    async def get_quote(self, pickup_address: dict, drop_address: dict, cart_total: float) -> Dict[str, Any]:
         """Get quote for order."""
         endpoint = f"internal/delivery/get_quote"
-        return await self.post(endpoint, json=order)
+        body = {"pickup_address": pickup_address, "drop_address": drop_address, "cart_total": cart_total}
+        return await self.post(endpoint, json=body)
 
-    async def place_order(self, order: dict) -> Dict[str, Any]:
+    async def place_order(
+            self,
+            pickup_point: dict,
+            drop_point: dict,
+            delivery_partner: str,
+            cart_total: float,
+            order_id: str,
+            items: list[dict],
+    ) -> Dict[str, Any]:
         """Place order."""
         endpoint = f"internal/delivery/place_order"
-        return await self.post(endpoint, json=order)
+        body = {
+            "pickup_point": pickup_point,
+            "drop_point": drop_point,
+            "delivery_partner": delivery_partner,
+            "cart_total": cart_total,
+            "order_id": order_id,
+            "items": items
+        }
+        return await self.post(endpoint, json=body)
 
     async def cancel_order(self, order_id: int) -> Dict[str, Any]:
         """Cancel order."""

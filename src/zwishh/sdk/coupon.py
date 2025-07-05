@@ -28,12 +28,30 @@ from .base_client import BaseServiceClient
 
 from typing import Dict, Any
 
+
 class CouponServiceClient(BaseServiceClient):
     """High-level async wrapper for Coupon-service endpoints."""
     async def get_coupon(self, coupon_code: str) -> Dict[str, Any]:
         """Get coupon."""
         endpoint = f"internal/coupon/{coupon_code}"
         return await self.get(endpoint)
+
+    async def validate_coupon(
+            self,
+            coupon_code: str,
+            user_id: str,
+            shop_id: str,
+            cart_total: float
+    ) -> Dict[str, Any]:
+        """Validate coupon."""
+        endpoint = f"internal/coupon/validate"
+        body = {
+            "coupon_code": coupon_code,
+            "user_id": user_id,
+            "shop_id": shop_id,
+            "cart_total": cart_total
+        }
+        return await self.post(endpoint, json=body)
     
     async def apply_coupon(self, coupon_code: str) -> Dict[str, Any]:
         """Apply coupon."""
