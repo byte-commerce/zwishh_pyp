@@ -98,9 +98,7 @@ class SellerServiceClient(BaseServiceClient):
         """Fetch variant details from seller service."""
 
         endpoint = "internal/products/variants/batch"
-        data = {
-            "variant_ids": variant_ids,
-        }
+        data = variant_ids
         return await self.post(endpoint, json=data)
 
     async def get_products_batch(
@@ -110,7 +108,5 @@ class SellerServiceClient(BaseServiceClient):
         """Fetch product details from seller service."""
 
         endpoint = "internal/products/batch"
-        data = {
-            "product_ids": product_ids,
-        }
+        data = product_ids
         return await self.post(endpoint, json=data)
