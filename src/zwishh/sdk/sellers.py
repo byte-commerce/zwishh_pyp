@@ -102,3 +102,15 @@ class SellerServiceClient(BaseServiceClient):
             "variant_ids": variant_ids,
         }
         return await self.post(endpoint, json=data)
+
+    async def get_products_batch(
+        self, 
+        product_ids: list[str], 
+    ) -> Dict[str, Any]:
+        """Fetch product details from seller service."""
+
+        endpoint = "internal/products/batch"
+        data = {
+            "product_ids": product_ids,
+        }
+        return await self.post(endpoint, json=data)
