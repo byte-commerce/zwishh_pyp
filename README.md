@@ -16,8 +16,13 @@ It is intended for **internal use only** and should be used by trusted services 
 Clients for accessing core Zwishh services:
 
 - `OrdersClient` – create & fetch orders
-- `AuthClient` – validate tokens, get user info
 - `CartClient` – manage cart state
+- `DeliveryClient` – manage delivery state
+- `CouponClient` – manage coupon state
+- `InteractionClient` – manage interaction state
+- `UserServiceClient` – manage user state
+- `SellerServiceClient` – manage seller state
+
 
 Each client:
 - Uses async `httpx`
@@ -29,7 +34,7 @@ Each client:
 
 ## 🛠 Installation
 
-You can install it directly from GitHub Packages:
+You can install it directly from PyPI:
 
 ```bash
-pip install "zwishh==0.1.0" --extra-index-url https://pypi.pkg.github.com/zwishh
+pip install zwishh
