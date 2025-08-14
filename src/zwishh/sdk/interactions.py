@@ -32,11 +32,11 @@ class InteractionServiceClient(BaseServiceClient):
         return await self.get(endpoint)
 
     async def get_likes_count(self, product_ids: list[int]):
-        endpoint = f"products/likes/count"
+        endpoint = "products/likes/count"
         params = {"product_ids": product_ids}
         return await self.get(endpoint, params=params)
 
     async def get_views_count(self, product_ids: list[int]):
-        endpoint = f"products/view-totals"
+        endpoint = "products/view-totals"
         params = {"product_ids": product_ids}
         return await self.get(endpoint, params=params)

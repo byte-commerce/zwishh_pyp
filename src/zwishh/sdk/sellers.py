@@ -61,23 +61,37 @@ class SellerServiceClient(BaseServiceClient):
         endpoint = f"internal/shops/{shop_id}"
         return await self.get(endpoint)
 
-    async def get_shops(self, limit: int = 10, offset: int = 0) -> Dict[str, Any]:
+    async def get_shops(self, 
+        limit: int = 10, 
+        offset: int = 0, 
+        updated_after: str | None = None,
+        updated_before: str | None = None,
+    ) -> Dict[str, Any]:
         """Get shops."""
 
         endpoint = "internal/shops"
         params = {
             "limit": limit,
             "offset": offset,
+            "updated_after": updated_after,
+            "updated_before": updated_before,
         }
         return await self.get(endpoint, params=params)
 
-    async def get_products(self, limit: int = 10, offset: int = 0) -> Dict[str, Any]:
+    async def get_products(self, 
+        limit: int = 10, 
+        offset: int = 0, 
+        updated_after: str | None = None,
+        updated_before: str | None = None,  
+    ) -> Dict[str, Any]:
         """Get products."""
 
         endpoint = "internal/products"
         params = {
             "limit": limit,
             "offset": offset,
+            "updated_after": updated_after,
+            "updated_before": updated_before,
         }
         return await self.get(endpoint, params=params)
 

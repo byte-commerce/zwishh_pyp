@@ -2,7 +2,6 @@
 import pytest
 import respx
 from httpx import Response
-import json
 import random
 from zwishh.sdk.delivery import DeliveryServiceClient
 

@@ -34,7 +34,7 @@ class DeliveryServiceClient(BaseServiceClient):
 
     async def get_quote(self, pickup_address: dict, drop_address: dict, cart_total: float) -> Dict[str, Any]:
         """Get quote for order."""
-        endpoint = f"internal/delivery/get_quote"
+        endpoint = "internal/delivery/get_quote"
         body = {"pickup_address": pickup_address, "drop_address": drop_address, "cart_total": cart_total}
         return await self.post(endpoint, json=body)
 
@@ -48,7 +48,7 @@ class DeliveryServiceClient(BaseServiceClient):
             items: list[dict],
     ) -> Dict[str, Any]:
         """Place order."""
-        endpoint = f"internal/delivery/place_order"
+        endpoint = "internal/delivery/place_order"
         body = {
             "pickup_point": pickup_point,
             "drop_point": drop_point,
@@ -61,10 +61,10 @@ class DeliveryServiceClient(BaseServiceClient):
 
     async def cancel_order(self, order_id: int) -> Dict[str, Any]:
         """Cancel order."""
-        endpoint = f"internal/delivery/cancel_order"
+        endpoint = "internal/delivery/cancel_order"
         return await self.post(endpoint, json={"order_id": order_id})
 
     async def track_order(self, order_id: int) -> Dict[str, Any]:
         """Track order."""
-        endpoint = f"internal/delivery/track_order"
+        endpoint = "internal/delivery/track_order"
         return await self.post(endpoint, json={"order_id": order_id})

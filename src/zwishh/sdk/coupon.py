@@ -44,7 +44,7 @@ class CouponServiceClient(BaseServiceClient):
             cart_total: float
     ) -> Dict[str, Any]:
         """Validate coupon."""
-        endpoint = f"internal/coupon/validate"
+        endpoint = "internal/coupon/validate"
         body = {
             "coupon_code": coupon_code,
             "user_id": user_id,
@@ -55,5 +55,5 @@ class CouponServiceClient(BaseServiceClient):
     
     async def apply_coupon(self, coupon_code: str) -> Dict[str, Any]:
         """Apply coupon."""
-        endpoint = f"internal/coupon/apply"
+        endpoint = "internal/coupon/apply"
         return await self.post(endpoint, json={"coupon_code": coupon_code})
