@@ -73,9 +73,12 @@ class SellerServiceClient(BaseServiceClient):
         params = {
             "limit": limit,
             "offset": offset,
-            "updated_after": updated_after,
-            "updated_before": updated_before,
         }
+        if updated_after:
+            params["updated_after"] = updated_after
+        if updated_before:
+            params["updated_before"] = updated_before
+
         return await self.get(endpoint, params=params)
 
     async def get_products(self, 
@@ -90,9 +93,11 @@ class SellerServiceClient(BaseServiceClient):
         params = {
             "limit": limit,
             "offset": offset,
-            "updated_after": updated_after,
-            "updated_before": updated_before,
         }
+        if updated_after:
+            params["updated_after"] = updated_after
+        if updated_before:
+            params["updated_before"] = updated_before
         return await self.get(endpoint, params=params)
 
     async def get_product_variant_details(
