@@ -40,7 +40,7 @@ class OrderServiceClient(BaseServiceClient):
     ) -> Dict[str, Any]:
         """Create an order from the cart."""
 
-        endpoint = "orders"
+        endpoint = "internal/orders"
         data = {
             "cart": cart
         }

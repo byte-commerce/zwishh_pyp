@@ -9,6 +9,9 @@ ruff check src/ tests/
 echo "Running pytest..."
 pytest -q
 
+echo "Removing old dist directory..."
+rm -rf dist
+
 echo "Building wheel..."
 python -m build
 

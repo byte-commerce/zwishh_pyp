@@ -27,7 +27,7 @@ async def test_create_order_success(order_service: OrderServiceClient) -> None:
     
     # Mock the HTTP response
     mock_route = respx.post(
-        "http://test-server/orders",
+        "http://test-server/internal/orders",
         json={"cart": cart_data},
         headers={"X-Service-API-Key": "test-key"}
     ).mock(return_value=Response(201, json=expected_order))
@@ -49,7 +49,7 @@ async def test_create_order_unauthorized(order_service: OrderServiceClient) -> N
     
     # Mock 401 response
     respx.post(
-        "http://test-server/orders",
+        "http://test-server/internal/orders",
         json={"cart": cart_data},
         headers={"X-Service-API-Key": "test-key"}
     ).mock(return_value=Response(401, text="Unauthorized"))
@@ -68,7 +68,7 @@ async def test_create_order_validation_error(order_service: OrderServiceClient) 
     
     # Mock 400 response
     respx.post(
-        "http://test-server/orders",
+        "http://test-server/internal/orders",
         json={"cart": invalid_cart},
         headers={"X-Service-API-Key": "test-key"}
     ).mock(return_value=Response(400, json={"detail": "Missing required field: items"}))
@@ -87,7 +87,7 @@ async def test_api_key_injection(order_service: OrderServiceClient) -> None:
     
     # Mock the HTTP response
     mock_route = respx.post(
-        "http://test-server/orders",
+        "http://test-server/internal/orders",
         json={"cart": cart_data},
         headers={"X-Service-API-Key": "test-key"}
     ).mock(return_value=Response(201, json={"id": 456}))
