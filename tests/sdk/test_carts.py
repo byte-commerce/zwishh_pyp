@@ -123,7 +123,7 @@ async def test_unlock_cart_success(cart_service: CartServiceClient) -> None:
     cart_id = 123
     
     # Mock the HTTP response
-    mock_route = respx.post(
+    mock_route = respx.patch(
         f"http://test-server/internal/carts/{cart_id}/unlock",
         headers={"X-Service-API-Key": "test-key"}
     ).mock(return_value=Response(200, json={"status": "unlocked"}))
@@ -144,7 +144,7 @@ async def test_unlock_cart_not_found(cart_service: CartServiceClient) -> None:
     cart_id = 999
     
     # Mock 404 response
-    respx.post(
+    respx.patch(
         f"http://test-server/internal/carts/{cart_id}/unlock",
         headers={"X-Service-API-Key": "test-key"}
     ).mock(return_value=Response(404, text="Cart not found"))

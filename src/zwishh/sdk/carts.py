@@ -63,4 +63,4 @@ class CartServiceClient(BaseServiceClient):
         """Unlock a cart."""
 
         endpoint = f"internal/carts/{cart_id}/unlock"
-        return await self.post(endpoint)  # type: ignore[return-value]
+        return await self.patch(endpoint)  # type: ignore[return-value]
