@@ -6,8 +6,7 @@ from httpx import Response
 
 from zwishh.sdk.carts import CartServiceClient
 from zwishh.sdk.base_client import (
-    ServiceClientNotFound,
-    ServiceClientUnauthorized,
+    NonRetryableHTTPError,
 )
 
 
@@ -53,7 +52,7 @@ async def test_get_cart_not_found(cart_service: CartServiceClient) -> None:
     ).mock(return_value=Response(404, text="Cart not found"))
     
     # Act & Assert
-    with pytest.raises(ServiceClientNotFound):
+    with pytest.raises(NonRetryableHTTPError):
         await cart_service.get_cart(cart_id)
 
 
@@ -71,7 +70,7 @@ async def test_get_cart_unauthorized(cart_service: CartServiceClient) -> None:
     ).mock(return_value=Response(401, text="Unauthorized"))
     
     # Act & Assert
-    with pytest.raises(ServiceClientUnauthorized):
+    with pytest.raises(NonRetryableHTTPError):
         await cart_service.get_cart(cart_id)
 
 
@@ -110,7 +109,7 @@ async def test_delete_cart_not_found(cart_service: CartServiceClient) -> None:
     ).mock(return_value=Response(404, text="Cart not found"))
     
     # Act & Assert
-    with pytest.raises(ServiceClientNotFound):
+    with pytest.raises(NonRetryableHTTPError):
         await cart_service.delete_cart(cart_id)
 
 
@@ -150,7 +149,7 @@ async def test_unlock_cart_not_found(cart_service: CartServiceClient) -> None:
     ).mock(return_value=Response(404, text="Cart not found"))
     
     # Act & Assert
-    with pytest.raises(ServiceClientNotFound):
+    with pytest.raises(NonRetryableHTTPError):
         await cart_service.unlock_cart(cart_id)
 
 

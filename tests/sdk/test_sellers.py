@@ -6,7 +6,7 @@ from httpx import Response
 
 from zwishh.sdk.sellers import SellerServiceClient
 from zwishh.sdk.base_client import (
-    ServiceClientNotFound,
+    NonRetryableHTTPError,
 )
 
 
@@ -125,7 +125,7 @@ async def test_get_shop_not_found(seller_service: SellerServiceClient) -> None:
     ).mock(return_value=Response(404, text="Shop not found"))
     
     # Act & Assert
-    with pytest.raises(ServiceClientNotFound):
+    with pytest.raises(NonRetryableHTTPError):
         await seller_service.get_shop(shop_id)
 
 

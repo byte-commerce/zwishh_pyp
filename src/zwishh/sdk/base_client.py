@@ -8,6 +8,7 @@ from tenacity import (
     retry,
     stop_after_attempt,
     wait_exponential,
+    retry_if_exception_type,
 )
 
 logger = logging.getLogger("zwishh.sdk")
@@ -29,6 +30,10 @@ class ServiceClientNotFound(ServiceClientError):
 
 class ServiceClientUnauthorized(ServiceClientError):
     """Service unauthorized error."""
+
+class NonRetryableHTTPError(Exception):
+    """Used to mark errors that should not trigger retries."""
+    pass
 
 
 class BaseServiceClient:
@@ -62,8 +67,9 @@ class BaseServiceClient:
     # ------------------------------------------------------------------ #
     # Internal request wrapper                                           #
     # ------------------------------------------------------------------ #
-    
+
     @retry(
+        retry=retry_if_exception_type((httpx.RequestError, httpx.HTTPStatusError)),
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=1, max=5),
         reraise=True
@@ -112,12 +118,26 @@ class BaseServiceClient:
         return base
 
     @staticmethod
-    def _handle_http_error(exc: httpx.HTTPStatusError) -> None:  # noqa: ANN001
-        status = exc.response.status_code
-        if status == 404:
-            raise ServiceClientNotFound(exc.response.text) from exc
-        if status in (401, 403):
-            raise ServiceClientUnauthorized() from exc
-        raise ServiceClientError(f"Service responded with {status}") from exc
+    def _handle_http_error(exc: httpx.HTTPStatusError):
+        status_code = exc.response.status_code
+        url = exc.request.url
+    
+        # Log the response for debugging
+        logger.error(f"HTTP {status_code} error on {url}: {exc.response.text}")
+
+        # --- Transient / retryable errors ---
+        if 500 <= status_code < 600:
+            # Raise the same exception so Tenacity retries
+            raise exc
+
+        # --- Non-retryable errors ---
+        elif status_code in (400, 401, 403, 404, 409, 422):
+            # Raise a custom exception that Tenacity won't retry
+            raise NonRetryableHTTPError(f"Non-retryable HTTP error {status_code} for {url}: {exc.response.text}")
+
+        else:
+            # Default fallback: raise as-is (Tenacity will retry if configured broadly)
+            raise exc
+
 
 

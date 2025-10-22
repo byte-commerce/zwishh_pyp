@@ -6,8 +6,7 @@ from httpx import Response
 
 from zwishh.sdk.users import UserServiceClient
 from zwishh.sdk.base_client import (
-    ServiceClientNotFound,
-    ServiceClientUnauthorized,
+    NonRetryableHTTPError,
 )
 
 
@@ -84,7 +83,7 @@ async def test_get_user_not_found(user_service: UserServiceClient) -> None:
     ).mock(return_value=Response(404, text="User not found"))
     
     # Act & Assert
-    with pytest.raises(ServiceClientNotFound):
+    with pytest.raises(NonRetryableHTTPError):
         await user_service.get_user(user_id)
 
 
@@ -103,7 +102,7 @@ async def test_get_user_unauthorized(user_service: UserServiceClient) -> None:
     ).mock(return_value=Response(401, text="Unauthorized"))
     
     # Act & Assert
-    with pytest.raises(ServiceClientUnauthorized):
+    with pytest.raises(NonRetryableHTTPError):
         await user_service.get_user(user_id)
 
 
@@ -123,7 +122,7 @@ async def test_get_user_address_not_found(user_service: UserServiceClient) -> No
     ).mock(return_value=Response(404, text="Address not found"))
     
     # Act & Assert
-    with pytest.raises(ServiceClientNotFound):
+    with pytest.raises(NonRetryableHTTPError):
         await user_service.get_user_address(user_id, address_id)
 
 

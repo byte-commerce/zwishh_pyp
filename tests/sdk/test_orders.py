@@ -6,8 +6,7 @@ from httpx import Response
 
 from zwishh.sdk.orders import OrderServiceClient
 from zwishh.sdk.base_client import (
-    ServiceClientError,
-    ServiceClientUnauthorized,
+    NonRetryableHTTPError,
 )
 
 
@@ -55,7 +54,7 @@ async def test_create_order_unauthorized(order_service: OrderServiceClient) -> N
     ).mock(return_value=Response(401, text="Unauthorized"))
     
     # Act & Assert
-    with pytest.raises(ServiceClientUnauthorized):
+    with pytest.raises(NonRetryableHTTPError):
         await order_service.create_order(cart_data)
 
 
@@ -74,7 +73,7 @@ async def test_create_order_validation_error(order_service: OrderServiceClient) 
     ).mock(return_value=Response(400, json={"detail": "Missing required field: items"}))
     
     # Act & Assert
-    with pytest.raises(ServiceClientError):
+    with pytest.raises(NonRetryableHTTPError):
         await order_service.create_order(invalid_cart)
 
 

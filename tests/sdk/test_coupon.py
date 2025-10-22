@@ -3,7 +3,7 @@ import pytest
 import respx
 from httpx import Response
 from zwishh.sdk.coupon import CouponServiceClient
-from zwishh.sdk.base_client import ServiceClientNotFound
+from zwishh.sdk.base_client import NonRetryableHTTPError
 
 
 @pytest.fixture
@@ -71,7 +71,7 @@ async def test_invalid_coupon(coupon_client):
             return_value=Response(404, json=error_response)
         )
         
-        with pytest.raises(ServiceClientNotFound):
+        with pytest.raises(NonRetryableHTTPError):
             response = await coupon_client.get_coupon(invalid_coupon)
         
             assert response == error_response

@@ -6,8 +6,7 @@ from httpx import Response
 
 from zwishh.sdk.interactions import InteractionServiceClient
 from zwishh.sdk.base_client import (
-    ServiceClientNotFound,
-    ServiceClientUnauthorized,
+    NonRetryableHTTPError,
 )
 
 
@@ -56,7 +55,7 @@ async def test_get_followers_count_not_found(interaction_service: InteractionSer
     ).mock(return_value=Response(404, json={"detail": "Seller not found"}))
     
     # Act & Assert
-    with pytest.raises(ServiceClientNotFound):
+    with pytest.raises(NonRetryableHTTPError):
         await interaction_service.get_followers_count(seller_id)
 
 
@@ -154,5 +153,5 @@ async def test_unauthorized_access(interaction_service: InteractionServiceClient
     ).mock(return_value=Response(401, json={"detail": "Unauthorized"}))
     
     # Act & Assert
-    with pytest.raises(ServiceClientUnauthorized):
+    with pytest.raises(NonRetryableHTTPError):
         await interaction_service.get_followers_count(seller_id)
