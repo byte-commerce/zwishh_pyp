@@ -129,6 +129,81 @@ async def test_get_shop_not_found(seller_service: SellerServiceClient) -> None:
         await seller_service.get_shop(shop_id)
 
 
+# Test reserve_inventory
+@pytest.mark.asyncio
+@respx.mock
+async def test_reserve_inventory_success(seller_service: SellerServiceClient) -> None:
+    """Test successful inventory reservation."""
+    # Arrange
+    items = [{"variant_id": "var_123", "quantity": 2}]
+    cart_id = "cart_456"
+    expected_response = {"success": True, "reserved_items": items}
+    
+    # Mock the HTTP response
+    mock_route = respx.post(
+        "http://test-server/internal/inventory/reserve",
+        json={"items": items, "cart_id": cart_id},
+        headers={"X-Service-API-Key": "test-key"}
+    ).mock(return_value=Response(200, json=expected_response))
+    
+    # Act
+    result = await seller_service.reserve_inventory(items, cart_id)
+    
+    # Assert
+    assert result == expected_response
+    assert mock_route.called
+
+
+# Test release_inventory
+@pytest.mark.asyncio
+@respx.mock
+async def test_release_inventory_success(seller_service: SellerServiceClient) -> None:
+    """Test successful inventory release."""
+    # Arrange
+    items = [{"variant_id": "var_123", "quantity": 2}]
+    cart_id = "cart_456"
+    expected_response = {"success": True, "released_items": items}
+    
+    # Mock the HTTP response
+    mock_route = respx.post(
+        "http://test-server/internal/inventory/release",
+        json={"items": items, "cart_id": cart_id},
+        headers={"X-Service-API-Key": "test-key"}
+    ).mock(return_value=Response(200, json=expected_response))
+    
+    # Act
+    result = await seller_service.release_inventory(items, cart_id)
+    
+    # Assert
+    assert result == expected_response
+    assert mock_route.called
+
+
+# Test commit_inventory
+@pytest.mark.asyncio
+@respx.mock
+async def test_commit_inventory_success(seller_service: SellerServiceClient) -> None:
+    """Test successful inventory commit."""
+    # Arrange
+    items = [{"variant_id": "var_123", "quantity": 2}]
+    cart_id = "cart_456"
+    expected_response = {"success": True, "committed_items": items}
+    
+    # Mock the HTTP response
+    mock_route = respx.post(
+        "http://test-server/internal/inventory/commit",
+        json={"items": items, "cart_id": cart_id},
+        headers={"X-Service-API-Key": "test-key"}
+    ).mock(return_value=Response(200, json=expected_response))
+    
+    # Act
+    result = await seller_service.commit_inventory(items, cart_id)
+    
+    # Assert
+    assert result == expected_response
+    assert mock_route.called
+
+
 # Test API key injection
 @pytest.mark.asyncio
 @respx.mock

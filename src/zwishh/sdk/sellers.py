@@ -129,3 +129,48 @@ class SellerServiceClient(BaseServiceClient):
         endpoint = "internal/products/batch"
         data = product_ids
         return await self.post(endpoint, json=data)
+
+    async def reserve_inventory(
+        self,
+        items: list[dict],
+        cart_id: str,
+    ) -> Dict[str, Any]:
+        """Reserve inventory for a variant."""
+
+        endpoint = "internal/inventory/reserve"
+        data = {
+            "items": items,
+            "cart_id": cart_id,
+        }
+        return await self.post(endpoint, json=data)
+
+    async def release_inventory(
+        self,
+        items: list[dict],
+        cart_id: str,
+    ) -> Dict[str, Any]:
+        """Release inventory for a variant."""
+
+        endpoint = "internal/inventory/release"
+        data = {
+            "items": items,
+            "cart_id": cart_id,
+        }
+        return await self.post(endpoint, json=data)
+
+    async def commit_inventory(
+        self,
+        items: list[dict],
+        cart_id: str,
+    ) -> Dict[str, Any]:
+        """Commit inventory for a variant."""
+
+        endpoint = "internal/inventory/commit"
+        data = {
+            "items": items,
+            "cart_id": cart_id,
+        }
+        return await self.post(endpoint, json=data)
+        
+
+        
