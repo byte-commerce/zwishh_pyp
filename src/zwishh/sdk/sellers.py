@@ -171,6 +171,20 @@ class SellerServiceClient(BaseServiceClient):
             "cart_id": cart_id,
         }
         return await self.post(endpoint, json=data)
+
+    async def rollback_inventory(
+        self,
+        items: list[dict],
+        cart_id: str,
+    ) -> Dict[str, Any]:
+        """Rollback inventory for a variant."""
+
+        endpoint = "internal/inventory/rollback"
+        data = {
+            "items": items,
+            "cart_id": cart_id,
+        }
+        return await self.post(endpoint, json=data)
         
 
         

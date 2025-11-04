@@ -204,6 +204,52 @@ async def test_commit_inventory_success(seller_service: SellerServiceClient) -> 
     assert mock_route.called
 
 
+# Test rollback_inventory
+@pytest.mark.asyncio
+@respx.mock
+async def test_rollback_inventory_success(seller_service: SellerServiceClient) -> None:
+    """Test successful inventory rollback."""
+    # Arrange
+    items = [{"variant_id": "var_123", "quantity": 2}]
+    cart_id = "cart_456"
+    expected_response = {"success": True, "rolled_back_items": items}
+    
+    # Mock the HTTP response
+    mock_route = respx.post(
+        "http://test-server/internal/inventory/rollback",
+        json={"items": items, "cart_id": cart_id},
+        headers={"X-Service-API-Key": "test-key"}
+    ).mock(return_value=Response(200, json=expected_response))
+    
+    # Act
+    result = await seller_service.rollback_inventory(items, cart_id)
+    
+    # Assert
+    assert result == expected_response
+    assert mock_route.called
+
+
+# Test rollback_inventory with error response
+@pytest.mark.asyncio
+@respx.mock
+async def test_rollback_inventory_error(seller_service: SellerServiceClient) -> None:
+    """Test inventory rollback with error response."""
+    # Arrange
+    items = [{"variant_id": "var_123", "quantity": 2}]
+    cart_id = "cart_456"
+    
+    # Mock error response
+    respx.post(
+        "http://test-server/internal/inventory/rollback",
+        json={"items": items, "cart_id": cart_id},
+        headers={"X-Service-API-Key": "test-key"}
+    ).mock(return_value=Response(400, json={"error": "Invalid items"}))
+    
+    # Act & Assert
+    with pytest.raises(NonRetryableHTTPError):
+        await seller_service.rollback_inventory(items, cart_id)
+
+
 # Test API key injection
 @pytest.mark.asyncio
 @respx.mock
